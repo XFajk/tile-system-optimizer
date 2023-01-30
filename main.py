@@ -7,7 +7,7 @@ pygame.init()
 
 def create_level() -> list:  # generates the 1000 by 1000 level
     level = []
-    for i in range(1000):
+    for i in range(1000):  # height
         level.append([])
         for j in range(1000):
             level[i].append(rnd.randint(1, 3))
@@ -19,6 +19,11 @@ def surf_rect(w, h, color) -> pygame.Surface:  # generates a rectangle surface w
     surf.fill(color)
     return surf
 
+def render_images():
+    img = []
+    for _ in range(4):
+        img.append(surf_rect(16, 16, (rnd.randint(0, 155), rnd.randint(0, 155), rnd.randint(0, 155))))
+    return img
 
 def main() -> None:
     window = pygame.display.set_mode((800, 608))  # makes the widow surface
@@ -27,10 +32,7 @@ def main() -> None:
     level = create_level()  # variable that stores the tile information
 
     # store the randomly colored tiles that have size 16x16 pixels
-    img = [surf_rect(16, 16, (rnd.randint(0, 155), rnd.randint(0, 155), rnd.randint(0, 155))),
-           surf_rect(16, 16, (rnd.randint(0, 155), rnd.randint(0, 155), rnd.randint(0, 155))),
-           surf_rect(16, 16, (rnd.randint(0, 155), rnd.randint(0, 155), rnd.randint(0, 155))),
-           surf_rect(16, 16, (rnd.randint(0, 155), rnd.randint(0, 155), rnd.randint(0, 155)))]
+    img = render_images()
 
     scroll = [0, 0]  # this variable the offset of all the tiles
 
@@ -56,8 +58,8 @@ def main() -> None:
 
         # the optimized rendering system
         if op:
-            for y in range(int(scroll[1] / 16), int(scroll[1] / 16) + int(608 / 16) + 1):
-                for x in range(int(scroll[0] / 16), int(scroll[0] / 16) + int(800 / 16) + 1):
+            for y in range(scroll[1] // 16, scroll[1] // 16 + (608 // 16) + 1):
+                for x in range(scroll[0] // 16, scroll[0] // 16 + (800 // 16) + 1):
                     try:
                         if x < 0 or x > len(level[y]):
                             pass
@@ -88,7 +90,7 @@ def main() -> None:
                         op = True
 
         # prints out on the window caption fps if optimized and the pos of the screen in tile coordination's
-        pygame.display.set_caption(f"{int(clock.get_fps())} {op} {int(scroll[1] / 16)} {int(scroll[0] / 16)}")
+        pygame.display.set_caption(f"FPS: {int(clock.get_fps())} op: {op} scroll: {int(scroll[1] / 16)} {int(scroll[0] / 16)}")
         clock.tick(999)  # caps the fps
 
 
